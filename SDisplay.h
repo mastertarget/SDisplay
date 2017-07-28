@@ -67,7 +67,7 @@ class SDisplay{
   **private variables and methods
   */
   private:
-    uint8_t segmente[7] = {}; //the led pins
+    uint8_t segmente[SEGMENT_COUNT] = {}; //the led pins
     uint8_t latch = 0;        //the latch pin
     bool isFlipped = false;   // for 180 degr flipped mode
     bool displayType = true;  // specify the display type

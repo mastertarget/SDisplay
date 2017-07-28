@@ -33,9 +33,13 @@ SOFTWARE.
 
 
 void SDisplay::_init(void){
+
+#ifdef ONBOARD_LED
   pinMode(ONBOARD_LED,OUTPUT); //Diagnostics
+#endif
+
   //Initialize MCU pins as OUTPUT
-  for(uint8_t i = 0; i<7; i++){
+  for(uint8_t i = 0; i<SEGMENT_COUNT; i++){
     pinMode(this->segmente[i],OUTPUT);
     digitalWrite(this->segmente[i],this->displayType);
     pinMode(this->latch,OUTPUT);
@@ -86,14 +90,16 @@ void SDisplay::num(uint8_t number){
   if(number > MAX_DISPLAY_VALUE){
     //if value is to high, show nothing but LED13
     this->clear();
+#ifdef ONBOARD_LED  //diagnostics
     digitalWrite(ONBOARD_LED,HIGH);
+#endif
     return;
   }
   uint8_t flipped = 0;
   if(this->isFlipped){
     flipped = 1;
   }
-  for(uint8_t i = 0; i<7; i++){
+  for(uint8_t i = 0; i<SEGMENT_COUNT; i++){
     if(this->displayType){
       digitalWrite(this->segmente[i],(~(this->bitmask[flipped][number]) >> i)&0x01);
     }
@@ -113,7 +119,7 @@ void SDisplay::clear(void){
   this->_update();
 }
 void SDisplay::lampTest(void){
-  //active if common anode display is used
+  //active high if common anode display is used
   for(uint8_t i = 0; i < SEGMENT_COUNT; i++){
     digitalWrite(i,this->displayType);
   }
